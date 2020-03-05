@@ -5,11 +5,16 @@ import PackageDescription
 
 let package = Package(
     name: "FABoLLValueShowableSlider",
+    platforms: [
+        .iOS(.v11),
+    ],
     products: [
         // Products define the executables and libraries produced by a package, and make them visible to other packages.
         .library(
             name: "FABoLLValueShowableSlider",
-            targets: ["FABoLLValueShowableSlider"]),
+            targets: [
+                "FABoLLValueShowableSlider",
+            ]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -24,5 +29,8 @@ let package = Package(
         .testTarget(
             name: "FABoLLValueShowableSliderTests",
             dependencies: ["FABoLLValueShowableSlider"]),
+    ],
+    swiftLanguageVersions: [
+        .v5,
     ]
 )
