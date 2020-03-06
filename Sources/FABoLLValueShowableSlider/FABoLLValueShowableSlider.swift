@@ -36,7 +36,7 @@ public class FABoLLValueShowableSlider: UISlider {
     ///
     ///
     ///
-    private var _settings: FABoLLValueShowableSliderSettings = FABoLLValueShowableSliderSettings
+    private(set) var _settings: FABoLLValueShowableSliderSettings = FABoLLValueShowableSliderSettings
         .init(
             label: UILabel.init()
         )
@@ -108,7 +108,19 @@ public class FABoLLValueShowableSlider: UISlider {
         if self._settings.isRoundedCorner == true {
             self._settings.label.clipsToBounds = true
             self._settings.label.layer.cornerRadius = self._settings.label.frame.width * 0.5
-        }        
+        }
+        if let frame: CGRect = self._thumbnail?.frame {
+            self._settings.label.frame = CGRect.init(
+                origin: CGPoint.init(
+                    x: frame.origin.x + self._settings.padding.left,
+                    y: frame.origin.y + self._settings.padding.top
+                ),
+                size: CGSize.init(
+                    width: frame.width - (self._settings.padding.left + self._settings.padding.right),
+                    height: frame.height - (self._settings.padding.top + self._settings.padding.bottom)
+                )
+            )
+        }
         self.addSubview(self._settings.label)
         self.bringSubviewToFront(self._settings.label)
     }
@@ -116,8 +128,8 @@ public class FABoLLValueShowableSlider: UISlider {
     ///
     ///
     private func _updateLabel() {
-        if let frame: CGRect = self._thumbnail?.frame {
-            self._settings.label.frame = frame
+        if let x: CGFloat = self._thumbnail?.frame.origin.x {
+            self._settings.label.frame.origin.x = x + self._settings.padding.left
         }
         self._settings.label.text = self._settings.valueToString(self.value)
     }

@@ -33,14 +33,32 @@ label.textAlignment = NSTextAlignment.center
 /// Create settings
 ///
 let settings: FABoLLValueShowableSliderSettings = FABoLLValueShowableSliderSettings.init(
-    label: label,
-    isRoundedCorner: true,
-    valueToString: { (value: Float) in
-        return String.init(format: "%d", Int(value * 100)) + "%"
-    }
+    label: label
 )
 ///
 /// Set settings
 ///
 self._valueShowableSlider.setLabel(settings: settings)
+```
+
+If you want to change size: 
+
+```
+let settings: FABoLLValueShowableSliderSettings = FABoLLValueShowableSliderSettings.init(
+    label: label,
+    padding: UIEdgeInsets.init(top: -5.0, left: -4.0, bottom: -3.0, right: -4.0)
+)
+```
+
+Full parameters:
+
+```
+let settings: FABoLLValueShowableSliderSettings = FABoLLValueShowableSliderSettings.init(
+    label: label,
+    isRoundedCorner: true,
+    padding: UIEdgeInsets.init(top: 0.0, left: 0.0, bottom: 2.0, right: 0.0),
+    valueToString: { (value: Float) in
+        return String.init(format: "%d", Int(value * 100)) + "%"
+    }
+)
 ```
