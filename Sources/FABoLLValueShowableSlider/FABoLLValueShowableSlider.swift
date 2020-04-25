@@ -50,12 +50,16 @@ public class FABoLLValueShowableSlider: UISlider {
     ///
     private var _thumbnail: UIImageView?
     ///
+    ///
+    ///
+    let tapJudging: FABoLLValueShowableSliderTapJudging = FABoLLValueShowableSliderTapJudging.init()
+    ///
     // MARK: -------------------- life cycle
     ///
     ///
     ///
     deinit {
-        print("ValueShowableSlider released")
+        print("FABoLLValueShowableSlider released")
     }
     ///
     /// `settings` define is [FABoLLValueShowableSliderSettings](x-source-tag://FABoLLValueShowableSliderSettings).
@@ -86,6 +90,19 @@ public class FABoLLValueShowableSlider: UISlider {
     ///
     ///
     ///
+    public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        if self._settings.canChangeTapped == false {
+            return
+        }
+        guard let point: CGPoint = touches.first?.location(in: self) else {
+            return
+        }
+        self.tapJudging.began(self, point)
+    }
+    ///
+    ///
+    ///
     public override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesMoved(touches, with: event)
         self._updateLabel()
@@ -95,7 +112,10 @@ public class FABoLLValueShowableSlider: UISlider {
     ///
     public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesEnded(touches, with: event)
-        self._updateLabel()
+        if self._settings.canChangeTapped == false {
+            return
+        }
+        self.tapJudging.ended()
     }
     ///
     // MARK: -------------------- method

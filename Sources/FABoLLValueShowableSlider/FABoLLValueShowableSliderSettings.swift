@@ -47,6 +47,12 @@ public struct FABoLLValueShowableSliderSettings {
     ///
     let valueToString: ((_ value: Float) -> String)
     ///
+    /// If you want to change a slider value by tapping, please set `true`
+    ///
+    /// Default is `false`
+    ///
+    let canChangeTapped: Bool
+    ///
     // MARK: -------------------- life cycle
     ///
     /// - `isRoundedCorner`
@@ -91,11 +97,13 @@ public struct FABoLLValueShowableSliderSettings {
         ),
         valueToString: ((_ value: Float) -> String)? = { (value: Float) in
             return "\(Int(value * 100.0))"
-        }
+        },
+        canChangeTapped: Bool? = false
     ) {
         self.label = label
         self.isRoundedCorner = isRoundedCorner!
         self.padding = padding!
         self.valueToString = valueToString!
+        self.canChangeTapped = canChangeTapped!
     }
 }

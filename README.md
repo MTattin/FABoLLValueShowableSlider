@@ -1,6 +1,7 @@
 # FABoLLValueShowableSlider
 
-You can show a slider value on the UISlider thumbnail.
+You can show a slider value on the UISlider thumbnail.  
+And you can change a slider value by tap it.
 
 # License
 MIT
@@ -59,6 +60,7 @@ let settings: FABoLLValueShowableSliderSettings = FABoLLValueShowableSliderSetti
     padding: UIEdgeInsets.init(top: 0.0, left: 0.0, bottom: 2.0, right: 0.0),
     valueToString: { (value: Float) in
         return String.init(format: "%d", Int(value * 100)) + "%"
-    }
+    },
+    canChangeTapped: true 
 )
 ```
