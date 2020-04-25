@@ -61,6 +61,7 @@ class FABoLLValueShowableSliderTapJudging {
                 }
                 let value: Float = Float(point.x / slider.bounds.width) * slider.maximumValue
                 slider.value = value
+                slider.sendActions(for: UIControl.Event.valueChanged)
                 self._tapAction = nil
             }
             ///
