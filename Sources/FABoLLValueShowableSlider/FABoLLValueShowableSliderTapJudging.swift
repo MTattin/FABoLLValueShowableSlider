@@ -40,6 +40,10 @@ class FABoLLValueShowableSliderTapJudging {
     ///
     private var _tapAction: (() -> Void)?
     ///
+    ///
+    ///
+    private var _beganPoint: CGPoint = CGPoint.zero
+    ///
     // MARK: -------------------- life cycle
     ///
     ///
@@ -55,6 +59,7 @@ class FABoLLValueShowableSliderTapJudging {
     func began(_ slider: FABoLLValueShowableSlider, _ point: CGPoint) {
         let now: TimeInterval = Date.init().timeIntervalSince1970
         if now - self._tapEnded > 0.2, self._tapAction == nil {
+            self._beganPoint = point
             self._tapAction = { [weak self] in
                 guard let self = self else {
                     return
@@ -75,11 +80,17 @@ class FABoLLValueShowableSliderTapJudging {
     ///
     ///
     ///
-    func ended() {
-        let now: TimeInterval = Date.init().timeIntervalSince1970
+    func ended(_ point: CGPoint) {
+        ///
+        /// If the point is changed, release `self._tapAction`
+        ///
+        if self._beganPoint != point {
+            self._tapAction = nil
+        }
         ///
         /// If the end of the next tap is less than 0.2 seconds, it is determined as continuous tap
         ///
+        let now: TimeInterval = Date.init().timeIntervalSince1970
         if now - self._tapEnded < 0.2 {
             self._tapAction = nil
         }

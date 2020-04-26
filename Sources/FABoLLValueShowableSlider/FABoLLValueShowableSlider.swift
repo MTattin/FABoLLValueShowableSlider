@@ -115,7 +115,10 @@ public class FABoLLValueShowableSlider: UISlider {
         if self._settings.canChangeTapped == false {
             return
         }
-        self.tapJudging.ended()
+        guard let point: CGPoint = touches.first?.location(in: self) else {
+            return
+        }
+        self.tapJudging.ended(point)
     }
     ///
     // MARK: -------------------- method

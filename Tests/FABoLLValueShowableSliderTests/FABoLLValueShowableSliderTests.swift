@@ -100,35 +100,58 @@ final class FABoLLValueShowableSliderTests: XCTestCase {
         )
         self._valueShowableSlider.tapJudging.began(self._valueShowableSlider, point)
         self._wait(0.5)
-        self._valueShowableSlider.tapJudging.ended()
+        self._valueShowableSlider.tapJudging.ended(point)
         /// The value does not change because it is judged as a long tap
         XCTAssertEqual(self._label.text, "50%")
         self._wait(0.5)
         ///
+        ///
+        ///
         self._valueShowableSlider.tapJudging.began(self._valueShowableSlider, point)
-        self._valueShowableSlider.tapJudging.ended()
+        self._valueShowableSlider.tapJudging.ended(point)
         self._valueShowableSlider.tapJudging.began(self._valueShowableSlider, point)
-        self._valueShowableSlider.tapJudging.ended()
+        self._valueShowableSlider.tapJudging.ended(point)
         /// The value does not change because it is judged as a long tap
         XCTAssertEqual(self._label.text, "50%")
         self._wait(0.5)
         ///
+        ///
+        ///
         self._valueShowableSlider.tapJudging.began(self._valueShowableSlider, point)
-        self._valueShowableSlider.tapJudging.ended()
+        self._valueShowableSlider.tapJudging.ended(point)
         self._wait(0.2)
         /// The value changes
         XCTAssertEqual(self._valueShowableSlider.value, 0.25)
         XCTAssertEqual(self._label.text, "25%")
         self._wait(0.5)
         ///
+        ///
+        ///
         point = CGPoint.init(
             x: self._valueShowableSlider.bounds.width * 0.75,
             y: self._valueShowableSlider.bounds.height * 0.5
         )
         self._valueShowableSlider.tapJudging.began(self._valueShowableSlider, point)
-        self._valueShowableSlider.tapJudging.ended()
+        self._valueShowableSlider.tapJudging.ended(point)
         self._wait(0.2)
         /// The value changes
+        XCTAssertEqual(self._valueShowableSlider.value, 0.75)
+        XCTAssertEqual(self._label.text, "75%")
+        ///
+        ///
+        ///
+        point = CGPoint.init(
+            x: self._valueShowableSlider.bounds.width * 0.25,
+            y: self._valueShowableSlider.bounds.height * 0.5
+        )
+        let point2 = CGPoint.init(
+            x: self._valueShowableSlider.bounds.width * 0.5,
+            y: self._valueShowableSlider.bounds.height * 0.5
+        )
+        self._valueShowableSlider.tapJudging.began(self._valueShowableSlider, point)
+        self._valueShowableSlider.tapJudging.ended(point2)
+        self._wait(0.2)
+        /// The value does not change because it is judged as a pan gesture
         XCTAssertEqual(self._valueShowableSlider.value, 0.75)
         XCTAssertEqual(self._label.text, "75%")
     }
