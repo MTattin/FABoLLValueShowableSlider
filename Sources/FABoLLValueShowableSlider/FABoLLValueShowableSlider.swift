@@ -74,17 +74,7 @@ public class FABoLLValueShowableSlider: UISlider {
     ///
     public override func layoutSubviews() {
         super.layoutSubviews()
-        self._thumbnail = self.subviews
-            .filter { (view: UIView) -> Bool in
-                guard
-                    let imageView: UIImageView = view as? UIImageView,
-                    self.currentThumbImage?.size == imageView.image?.size
-                else {
-                    return false
-                }
-                return true
-            }
-            .first as? UIImageView
+        self._setThumbnail()
         self._setLabel()
     }
     ///
@@ -155,5 +145,34 @@ public class FABoLLValueShowableSlider: UISlider {
             self._settings.label.frame.origin.x = x + self._settings.padding.left
         }
         self._settings.label.text = self._settings.valueToString(self.value)
+    }
+    ///
+    ///
+    ///
+    private func _setThumbnail() {
+        self._thumbnail = self.subviews
+            .filter { (view: UIView) -> Bool in
+                guard
+                    let imageView: UIImageView = view as? UIImageView,
+                    self.currentThumbImage?.size == imageView.image?.size
+                else {
+                    return false
+                }
+                return true
+            }
+            .first as? UIImageView
+        if self._thumbnail == nil {
+            self._thumbnail = self.subviews[0].subviews
+                .filter { (view: UIView) -> Bool in
+                    guard
+                        let imageView: UIImageView = view as? UIImageView,
+                        self.currentThumbImage?.size == imageView.image?.size
+                    else {
+                        return false
+                    }
+                    return true
+                }
+                .first as? UIImageView
+        }
     }
 }
