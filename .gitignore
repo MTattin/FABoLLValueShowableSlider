@@ -4,5 +4,7 @@
 /*.xcodeproj
 xcuserdata/
 
+.swiftpm/xcode/xcshareddata/xcschemes/
+
 DerivedData/*
 */DerivedData/*
