@@ -1,158 +1,134 @@
 import XCTest
 @testable import FABoLLValueShowableSlider
-///
-/// - Tag: FABoLLValueShowableSliderTests
-///
+
 final class FABoLLValueShowableSliderTests: XCTestCase {
-    ///
-    // MARK: -------------------- static properties
-    ///
-    ///
-    ///
+
+    // MARK: - Static Properties
+
     static var allTests = [
         ("testSetup", testSetup),
     ]
-    ///
-    // MARK: -------------------- properties
-    ///
-    ///
-    ///
-    private let _base: UIView = UIView.init(frame: UIScreen.main.bounds)
-    private let _valueShowableSlider: FABoLLValueShowableSlider = FABoLLValueShowableSlider.init()
-    private let _label: UILabel = UILabel.init()
-    ///
-    ///
-    ///
-    private func _wait(_ time: TimeInterval) {
+
+    // MARK: - Properties
+
+    private let base = UIView(frame: UIScreen.main.bounds)
+
+    private let valueShowableSlider = FABoLLValueShowableSlider()
+
+    private let label = UILabel()
+
+    private func wait(_ time: TimeInterval) {
         let expectation: XCTestExpectation = XCTestExpectation.init(description: "delay")
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + time) {
             expectation.fulfill()
         }
-        wait(for: [expectation], timeout: time + 1.0)
+        wait(for: [expectation], timeout: time + 1)
     }
-    ///
-    // MARK: -------------------- tests
-    ///
-    ///
-    ///
+
+    // MARK: - tests
+
     override func setUp() {
         super.setUp()
-        self._base.addSubview(self._valueShowableSlider)
-        self._valueShowableSlider.frame = CGRect.init(
-            origin: CGPoint.zero,
-            size: CGSize.init(
-                width: self._base.frame.width - 20.0,
-                height: self._valueShowableSlider.frame.height
-            )
+        base.addSubview(valueShowableSlider)
+        valueShowableSlider.frame = CGRect(
+            origin: .zero,
+            size: CGSize(width: base.frame.width - 20, height: valueShowableSlider.frame.height)
         )
-        self._valueShowableSlider.center = self._base.center
-        self._label.backgroundColor = UIColor.clear
-        self._label.textColor = UIColor.darkText
-        self._label.font = UIFont.systemFont(ofSize: 10.0)
-        self._label.adjustsFontSizeToFitWidth = true
-        self._label.minimumScaleFactor = 0.5
-        self._label.textAlignment = NSTextAlignment.center
+        valueShowableSlider.center = base.center
+        label.backgroundColor = .clear
+        label.textColor = .darkText
+        label.font = UIFont.systemFont(ofSize: 10)
+        label.adjustsFontSizeToFitWidth = true
+        label.minimumScaleFactor = 0.5
+        label.textAlignment = .center
     }
-    ///
-    ///
-    ///
+
     func testSetup() {
-        let settings: FABoLLValueShowableSliderSettings = FABoLLValueShowableSliderSettings.init(
-            label: self._label,
+        let settings = FABoLLValueShowableSliderSettings(
+            label: label,
             isRoundedCorner: true,
-            valueToString: { (value: Float) in
-                return String.init(format: "%d", Int(value * 100)) + "%"
+            valueToString: { value in
+                return String(format: "%d", Int(value * 100)) + "%"
             }
         )
-        self._valueShowableSlider.setLabel(settings: settings)
-        self._valueShowableSlider.value = 1.0
-        XCTAssertEqual(self._label.text, "100%")
-        self._valueShowableSlider.value = 0.0
-        XCTAssertEqual(self._label.text, "0%")
-        self._valueShowableSlider.value = 0.5
-        XCTAssertEqual(self._label.text, "50%")
+        valueShowableSlider.setLabel(settings: settings)
+        valueShowableSlider.value = 1
+        XCTAssertEqual(label.text, "100%")
+        valueShowableSlider.value = 0
+        XCTAssertEqual(label.text, "0%")
+        valueShowableSlider.value = 0.5
+        XCTAssertEqual(label.text, "50%")
     }
-    ///
-    ///
-    ///
-    func testSetupCanChangeTapped() {
-        let settings: FABoLLValueShowableSliderSettings = FABoLLValueShowableSliderSettings.init(
-            label: self._label,
+
+    @MainActor func testSetupCanChangeTapped() {
+        let settings = FABoLLValueShowableSliderSettings(
+            label: label,
             isRoundedCorner: true,
-            valueToString: { (value: Float) in
-                return String.init(format: "%d", Int(value * 100)) + "%"
+            valueToString: { value in
+                return String(format: "%d", Int(value * 100)) + "%"
             },
             canChangeTapped: true
         )
-        self._valueShowableSlider.setLabel(settings: settings)
-        self._valueShowableSlider.value = 1.0
-        XCTAssertEqual(self._label.text, "100%")
-        self._valueShowableSlider.value = 0.0
-        XCTAssertEqual(self._label.text, "0%")
-        self._valueShowableSlider.value = 0.5
-        XCTAssertEqual(self._label.text, "50%")
-        ///
-        /// Tap testing
-        ///
-        var point: CGPoint = CGPoint.init(
-            x: self._valueShowableSlider.bounds.width * 0.25,
-            y: self._valueShowableSlider.bounds.height * 0.5
+        valueShowableSlider.setLabel(settings: settings)
+        valueShowableSlider.value = 1
+        XCTAssertEqual(label.text, "100%")
+        valueShowableSlider.value = 0
+        XCTAssertEqual(label.text, "0%")
+        valueShowableSlider.value = 0.5
+        XCTAssertEqual(label.text, "50%")
+
+        // Tap testing
+        var point = CGPoint(
+            x: valueShowableSlider.bounds.width * 0.25,
+            y: valueShowableSlider.bounds.height * 0.5
         )
-        self._valueShowableSlider.tapJudging.began(self._valueShowableSlider, point)
-        self._wait(0.5)
-        self._valueShowableSlider.tapJudging.ended(point)
-        /// The value does not change because it is judged as a long tap
-        XCTAssertEqual(self._label.text, "50%")
-        self._wait(0.5)
-        ///
-        ///
-        ///
-        self._valueShowableSlider.tapJudging.began(self._valueShowableSlider, point)
-        self._valueShowableSlider.tapJudging.ended(point)
-        self._valueShowableSlider.tapJudging.began(self._valueShowableSlider, point)
-        self._valueShowableSlider.tapJudging.ended(point)
-        /// The value does not change because it is judged as a long tap
-        XCTAssertEqual(self._label.text, "50%")
-        self._wait(0.5)
-        ///
-        ///
-        ///
-        self._valueShowableSlider.tapJudging.began(self._valueShowableSlider, point)
-        self._valueShowableSlider.tapJudging.ended(point)
-        self._wait(0.2)
-        /// The value changes
-        XCTAssertEqual(self._valueShowableSlider.value, 0.25)
-        XCTAssertEqual(self._label.text, "25%")
-        self._wait(0.5)
-        ///
-        ///
-        ///
-        point = CGPoint.init(
-            x: self._valueShowableSlider.bounds.width * 0.75,
-            y: self._valueShowableSlider.bounds.height * 0.5
+        valueShowableSlider.tapJudging.began(valueShowableSlider, point)
+        wait(0.5)
+        valueShowableSlider.tapJudging.ended(point)
+        // The value does not change because it is judged as a long tap
+        XCTAssertEqual(label.text, "50%")
+        wait(0.5)
+
+        valueShowableSlider.tapJudging.began(valueShowableSlider, point)
+        valueShowableSlider.tapJudging.ended(point)
+        valueShowableSlider.tapJudging.began(valueShowableSlider, point)
+        valueShowableSlider.tapJudging.ended(point)
+        // The value does not change because it is judged as a long tap
+        XCTAssertEqual(label.text, "50%")
+        wait(0.5)
+
+        valueShowableSlider.tapJudging.began(valueShowableSlider, point)
+        valueShowableSlider.tapJudging.ended(point)
+        wait(0.2)
+        // The value changes
+        XCTAssertEqual(valueShowableSlider.value, 0.25)
+        XCTAssertEqual(label.text, "25%")
+        wait(0.5)
+
+        point = CGPoint(
+            x: valueShowableSlider.bounds.width * 0.75,
+            y: valueShowableSlider.bounds.height * 0.5
         )
-        self._valueShowableSlider.tapJudging.began(self._valueShowableSlider, point)
-        self._valueShowableSlider.tapJudging.ended(point)
-        self._wait(0.2)
-        /// The value changes
-        XCTAssertEqual(self._valueShowableSlider.value, 0.75)
-        XCTAssertEqual(self._label.text, "75%")
-        ///
-        ///
-        ///
-        point = CGPoint.init(
-            x: self._valueShowableSlider.bounds.width * 0.25,
-            y: self._valueShowableSlider.bounds.height * 0.5
+        valueShowableSlider.tapJudging.began(valueShowableSlider, point)
+        valueShowableSlider.tapJudging.ended(point)
+        wait(0.2)
+        // The value changes
+        XCTAssertEqual(valueShowableSlider.value, 0.75)
+        XCTAssertEqual(label.text, "75%")
+
+        point = CGPoint(
+            x: valueShowableSlider.bounds.width * 0.25,
+            y: valueShowableSlider.bounds.height * 0.5
         )
-        let point2 = CGPoint.init(
-            x: self._valueShowableSlider.bounds.width * 0.5,
-            y: self._valueShowableSlider.bounds.height * 0.5
+        let point2 = CGPoint(
+            x: valueShowableSlider.bounds.width * 0.5,
+            y: valueShowableSlider.bounds.height * 0.5
         )
-        self._valueShowableSlider.tapJudging.began(self._valueShowableSlider, point)
-        self._valueShowableSlider.tapJudging.ended(point2)
-        self._wait(0.2)
-        /// The value does not change because it is judged as a pan gesture
-        XCTAssertEqual(self._valueShowableSlider.value, 0.75)
-        XCTAssertEqual(self._label.text, "75%")
+        valueShowableSlider.tapJudging.began(valueShowableSlider, point)
+        valueShowableSlider.tapJudging.ended(point2)
+        wait(0.2)
+        // The value does not change because it is judged as a pan gesture
+        XCTAssertEqual(valueShowableSlider.value, 0.75)
+        XCTAssertEqual(label.text, "75%")
     }
 }
