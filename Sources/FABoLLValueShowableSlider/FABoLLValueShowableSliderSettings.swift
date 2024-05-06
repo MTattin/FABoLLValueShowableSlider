@@ -1,103 +1,71 @@
 //
-//  FABoLLValueShowableSliderSettings.swift
+//  FABoLLValueShowableSliderSettings
 //
+//  © 2023 Masakiyo Tachikawa
 //
-//  Created by Masakiyo Tachikawa on 2020/03/04.
-//
+
 import UIKit
-///
-/// - Tag: FABoLLValueShowableSliderSettings
-///
+
+// MARK: - FABoLLValueShowableSliderSettings
+
 public struct FABoLLValueShowableSliderSettings {
-    ///
-    // MARK: -------------------- properties
-    ///
-    ///
-    ///
+
+    // MARK: - Properties
+
     let label: UILabel
+    /// If you do not want a label  to round, please set `false`.
     ///
-    /// If you do not want a label  to round, please set `false`
-    ///
-    /// Default is `true`
-    ///
+    /// Default is `true`.
     let isRoundedCorner: Bool
+    /// Margin between UILabel and thumbnail UIImageView.
     ///
-    /// Margin between UILabel and thumbnail UIImageView
-    ///
-    /// Default is
+    /// Default UIEdgeInsets:
     /// ```
-    /// UIEdgeInsets.init(
-    ///     top: 0.0,
-    ///     left: 1.0,
-    ///     bottom: 2.0,
-    ///     right: 1.0
-    /// )
+    /// UIEdgeInsets(top: 0, left: 1, bottom: 2, right: 1)
     /// ```
-    ///
     let padding: UIEdgeInsets
-    ///
-    /// Closure to make string by UISlider.value
+    /// Closure to make string by UISlider.value.
     ///
     /// Default closure:
     /// ```
-    /// { (value: Float) in
-    ///     return "\(Int(value * 100.0))"
-    /// }
+    /// { value in "\(Int(value * 100))" }
     /// ```
+    let valueToString: ((Float) -> String)
+    /// If you want to change a slider value by tapping, please set `true`.
     ///
-    let valueToString: ((_ value: Float) -> String)
-    ///
-    /// If you want to change a slider value by tapping, please set `true`
-    ///
-    /// Default is `false`
-    ///
+    /// Default is `false`.
     let canChangeTapped: Bool
-    ///
-    // MARK: -------------------- life cycle
-    ///
+
+    // MARK: - Life cycle
+
     /// - `isRoundedCorner`
     ///
-    /// If you do not want a label  to round, please set `false`
+    /// If you do not want a label  to round, please set `false`.
     ///
-    /// Default is `true`
+    /// Default is `true`.
     ///
     /// - `padding`
     ///
-    /// Margin between UILabel and thumbnail UIImageView
+    /// Margin between UILabel and thumbnail UIImageView.
     ///
-    /// Default is
+    /// Default UIEdgeInsets:
     /// ```
-    /// UIEdgeInsets.init(
-    ///     top: 0.0,
-    ///     left: 1.0,
-    ///     bottom: 2.0,
-    ///     right: 1.0
-    /// )
+    /// UIEdgeInsets(top: 0, left: 1, bottom: 2, right: 1)
     /// ```
     ///
     /// - `valueToString`
     ///
-    /// Closure to make string by UISlider.value
+    /// Closure to make string by UISlider.value.
     ///
     /// Default closure:
     /// ```
-    /// { (value: Float) in
-    ///     return "\(Int(value * 100.0))"
-    /// }
+    /// { value in "\(Int(value * 100))" }
     /// ```
-    ///
     public init(
         label: UILabel,
         isRoundedCorner: Bool? = true,
-        padding: UIEdgeInsets? = UIEdgeInsets.init(
-            top: 0.0,
-            left: 1.0,
-            bottom: 2.0,
-            right: 1.0
-        ),
-        valueToString: ((_ value: Float) -> String)? = { (value: Float) in
-            return "\(Int(value * 100.0))"
-        },
+        padding: UIEdgeInsets? = UIEdgeInsets(top: 0, left: 1, bottom: 2, right: 1),
+        valueToString: ((Float) -> String)? = { value in "\(Int(value * 100))" },
         canChangeTapped: Bool? = false
     ) {
         self.label = label

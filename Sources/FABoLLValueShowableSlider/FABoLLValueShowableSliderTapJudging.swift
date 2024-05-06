@@ -24,83 +24,65 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 //
+
 import UIKit
-///
-/// - Tag: FABoLLValueShowableSliderTapJudging
-///
-class FABoLLValueShowableSliderTapJudging {
-    ///
-    // MARK: ------------------------------ properties
-    ///
-    ///
-    ///
-    private var _tapEnded: TimeInterval = 0.0
-    ///
-    ///
-    ///
-    private var _tapAction: (() -> Void)?
-    ///
-    ///
-    ///
-    private var _beganPoint: CGPoint = CGPoint.zero
-    ///
-    // MARK: -------------------- life cycle
-    ///
-    ///
-    ///
+
+// MARK: - FABoLLValueShowableSliderTapJudging
+
+@MainActor
+final class FABoLLValueShowableSliderTapJudging {
+
+    // MARK: - Properties
+
+    private var tapEnded: TimeInterval = 0
+
+    private var tapAction: (() -> Void)?
+
+    private var beganPoint: CGPoint = .zero
+
+    // MARK: - Life cycle
+
     deinit {
         print("FABoLLValueShowableSliderTapJudging released")
     }
-    ///
-    // MARK: -------------------- method
-    ///
-    ///
-    ///
+
+    // MARK: - Conveniences
+
     func began(_ slider: FABoLLValueShowableSlider, _ point: CGPoint) {
         let now: TimeInterval = Date.init().timeIntervalSince1970
-        if now - self._tapEnded > 0.2, self._tapAction == nil {
-            self._beganPoint = point
-            self._tapAction = { [weak self] in
+        if now - tapEnded > 0.2, tapAction == nil {
+            beganPoint = point
+            tapAction = { [weak self] in
                 guard let self = self else {
                     return
                 }
-                let value: Float = Float(point.x / slider.bounds.width) * slider.maximumValue
+                let value = Float(point.x / slider.bounds.width) * slider.maximumValue
                 slider.value = value
-                slider.sendActions(for: UIControl.Event.valueChanged)
-                slider.sendActions(for: UIControl.Event.touchUpInside)
-                self._tapAction = nil
+                slider.sendActions(for: .valueChanged)
+                slider.sendActions(for: .touchUpInside)
+                self.tapAction = nil
             }
-            ///
-            /// If the tap time exceeds  0.4 seconds, it is judge as a long tap
-            ///
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.4) { [weak self] in
-                self?._tapAction = nil
+            // If the tap time exceeds  0.4 seconds, it is judge as a long tap
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) { [weak self] in
+                self?.tapAction = nil
             }
         }
     }
-    ///
-    ///
-    ///
+
     func ended(_ point: CGPoint) {
-        ///
-        /// If the point is changed, release `self._tapAction`
-        ///
-        if self._beganPoint != point {
-            self._tapAction = nil
+        // If the point is changed, release `self._tapAction`
+        if beganPoint != point {
+            tapAction = nil
         }
-        ///
-        /// If the end of the next tap is less than 0.2 seconds, it is determined as continuous tap
-        ///
-        let now: TimeInterval = Date.init().timeIntervalSince1970
-        if now - self._tapEnded < 0.2 {
-            self._tapAction = nil
+        // If the end of the next tap is less than 0.2 seconds, it is determined as continuous tap
+        let now: TimeInterval = Date().timeIntervalSince1970
+        if now - tapEnded < 0.2 {
+            tapAction = nil
         }
-        self._tapEnded = Date.init().timeIntervalSince1970
-        ///
-        /// Delay the action to determine if the tap is continuous
-        ///
+        tapEnded = Date().timeIntervalSince1970
+        // Delay the action to determine if the tap is continuous
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.2) { [weak self] in
-            self?._tapAction?()
+            self?.tapAction?()
         }
     }
 }
