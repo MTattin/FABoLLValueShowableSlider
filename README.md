@@ -1,6 +1,9 @@
 # FABoLLValueShowableSlider
 
-[![FABoLL](https://custom-icon-badges.herokuapp.com/badge/license-FABoLL-8BB80A.svg?logo=law&logoColor=white)]()　[![iOS 16.0](https://custom-icon-badges.herokuapp.com/badge/iOS-16.0-007bff.svg?logo=apple&logoColor=white)]()　[![Xcode 15.3](https://custom-icon-badges.herokuapp.com/badge/Xcode-15.3-007bff.svg?logo=Xcode&logoColor=white)]()　[![Swift 5.9](https://custom-icon-badges.herokuapp.com/badge/Swift-5.9-df5c43.svg?logo=Swift&logoColor=white)]()
+[![FABoLL](https://custom-icon-badges.herokuapp.com/badge/license-FABoLL-8BB80A.svg?logo=law&logoColor=white)]()　
+[![iOS 16.0](https://custom-icon-badges.herokuapp.com/badge/iOS-16.0-007bff.svg?logo=apple&logoColor=white)]()　
+[![Xcode 16.2](https://custom-icon-badges.herokuapp.com/badge/Xcode-16.2-007bff.svg?logo=Xcode&logoColor=white)]()　
+[![Swift 6.0](https://custom-icon-badges.herokuapp.com/badge/Swift-6.0-df5c43.svg?logo=Swift&logoColor=white)]()
 
 You can show a slider value on the UISlider thumbnail.  
 And you can change a slider value by tap it.
@@ -33,8 +36,11 @@ If you want to change size:
 ```swift
 let settings = FABoLLValueShowableSliderSettings(
     label: label,
-    padding: UIEdgeInsets.init(top: -5, left: -4, bottom: -3, right: -4)
+    padding: UIEdgeInsets(top: -5, left: -4, bottom: -3, right: -4)
 )
+// OR
+var settings = FABoLLValueShowableSliderSettings(label: label)
+settings.update(\.padding, UIEdgeInsets(top: -5, left: -4, bottom: -3, right: -4))
 ```
 
 Full parameters:
@@ -43,7 +49,7 @@ Full parameters:
 let settings = FABoLLValueShowableSliderSettings(
     label: label,
     isRoundedCorner: true,
-    padding: UIEdgeInsets.init(top: 0, left: 0, bottom: 2, right: 0),
+    padding: UIEdgeInsets(top: 0, left: 0, bottom: 2, right: 0),
     valueToString: { value in
         return String(format: "%d", Int(value * 100)) + "%"
     },
