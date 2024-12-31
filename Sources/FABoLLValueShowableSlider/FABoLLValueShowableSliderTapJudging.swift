@@ -1,31 +1,10 @@
 //
-//  FABoLLValueShowableSliderTapJudging.swift
+//  FABoLLValueShowableSliderTapJudging
 //
-//  Created by Masakiyo Tachikawa on 2020/03/05.
-//  Copyright © 2020 FABoLL. All rights reserved.
-//
-//  Copyright 2020 Masakiyo Tachikawa
-//
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
+//  © 2023 Masakiyo Tachikawa
 //
 
-import UIKit
+import Foundation
 
 // MARK: - FABoLLValueShowableSliderTapJudging
 
@@ -50,22 +29,20 @@ final class FABoLLValueShowableSliderTapJudging {
 
     func began(_ slider: FABoLLValueShowableSlider, _ point: CGPoint) {
         let now: TimeInterval = Date.init().timeIntervalSince1970
-        if now - tapEnded > 0.2, tapAction == nil {
-            beganPoint = point
-            tapAction = { [weak self] in
-                guard let self = self else {
-                    return
-                }
-                let value = Float(point.x / slider.bounds.width) * slider.maximumValue
-                slider.value = value
-                slider.sendActions(for: .valueChanged)
-                slider.sendActions(for: .touchUpInside)
-                self.tapAction = nil
-            }
-            // If the tap time exceeds  0.4 seconds, it is judge as a long tap
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) { [weak self] in
-                self?.tapAction = nil
-            }
+        guard now - tapEnded > 0.2, tapAction == nil else { return }
+        beganPoint = point
+        tapAction = { [weak self] in
+            guard let self = self else { return }
+            let value = Float(point.x / slider.bounds.width) * slider.maximumValue
+            slider.value = value
+            slider.sendActions(for: .valueChanged)
+            slider.sendActions(for: .touchUpInside)
+            self.tapAction = nil
+        }
+        // If the tap time exceeds  0.4 seconds, it is judge as a long tap
+        Task {
+            try await Task.sleep(for: .seconds(0.4))
+            tapAction = nil
         }
     }
 
@@ -81,8 +58,9 @@ final class FABoLLValueShowableSliderTapJudging {
         }
         tapEnded = Date().timeIntervalSince1970
         // Delay the action to determine if the tap is continuous
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.2) { [weak self] in
-            self?.tapAction?()
+        Task {
+            try await Task.sleep(for: .seconds(0.2))
+            tapAction?()
         }
     }
 }
