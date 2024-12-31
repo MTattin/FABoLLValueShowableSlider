@@ -6,35 +6,33 @@
 
 import UIKit
 
-// MARK: - FABoLLValueShowableSliderSettings
-
-public struct FABoLLValueShowableSliderSettings {
+public struct FABoLLValueShowableSliderSettings: Sendable {
 
     // MARK: - Properties
 
-    let label: UILabel
+    public private(set) var label: UILabel
     /// If you do not want a label  to round, please set `false`.
     ///
     /// Default is `true`.
-    let isRoundedCorner: Bool
+    public private(set) var isRoundedCorner: Bool
     /// Margin between UILabel and thumbnail UIImageView.
     ///
     /// Default UIEdgeInsets:
     /// ```
     /// UIEdgeInsets(top: 0, left: 1, bottom: 2, right: 1)
     /// ```
-    let padding: UIEdgeInsets
+    public private(set) var padding: UIEdgeInsets
     /// Closure to make string by UISlider.value.
     ///
     /// Default closure:
     /// ```
     /// { value in "\(Int(value * 100))" }
     /// ```
-    let valueToString: ((Float) -> String)
+    public private(set) var valueToString: (@Sendable (Float) -> String)
     /// If you want to change a slider value by tapping, please set `true`.
     ///
     /// Default is `false`.
-    let canChangeTapped: Bool
+    public private(set) var canChangeTapped: Bool
 
     // MARK: - Life cycle
 
@@ -65,7 +63,7 @@ public struct FABoLLValueShowableSliderSettings {
         label: UILabel,
         isRoundedCorner: Bool? = true,
         padding: UIEdgeInsets? = UIEdgeInsets(top: 0, left: 1, bottom: 2, right: 1),
-        valueToString: ((Float) -> String)? = { value in "\(Int(value * 100))" },
+        valueToString: (@Sendable (Float) -> String)? = { value in "\(Int(value * 100))" },
         canChangeTapped: Bool? = false
     ) {
         self.label = label
@@ -73,5 +71,13 @@ public struct FABoLLValueShowableSliderSettings {
         self.padding = padding!
         self.valueToString = valueToString!
         self.canChangeTapped = canChangeTapped!
+    }
+
+    public mutating func update<T>(_ key: KeyPath<Self, T>, _ value: T) {
+        guard let writableKey = key as? WritableKeyPath<Self, T> else {
+            assertionFailure("KeyPath変換で問題発生")
+            return
+        }
+        self[keyPath: writableKey] = value
     }
 }
